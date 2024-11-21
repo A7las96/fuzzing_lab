@@ -49,4 +49,12 @@ d023a44119d2d6de625e7177069972acff92c0dfeb1fde060b6af59c4a470e2f  libxlsxwriter.
 ~/Documents/fuzz$ AFLplusplus/afl-fuzz -i in -o out -- ./libxlsxwriter/examples/fuzz @@
 ```
 > На данном этапе нужно было установить зависимость libpython3.11. Это было сделано с помощью команды ```$ sudo apt-get install libpython3.11```
-7. 
+
+7. В ходе установки возникали ошибки, их фикс следующий:
+7.1. Переписать файл /proc/sys/kernel/core_pattern, изменив его содержимое на echo core | sudo tee /proc/sys/kernel/core_pattern
+7.2 Исполнить команды
+```
+cd /sys/devices/system/cpu
+echo performance | tee cpu*/cpufreq/scaling_governor
+```
+8. 
