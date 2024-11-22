@@ -35,7 +35,7 @@ d023a44119d2d6de625e7177069972acff92c0dfeb1fde060b6af59c4a470e2f  libxlsxwriter.
 ~/Documents/fuzz$ cd AFLplusplus/
 ~/Documents/fuzz/AFLplusplus$ make
 ```
-3. Для фаззинга был подготовлен файл fuzz.c, в котором осуществляются вызовы функций библиотеки. Данный файл был сохранен в директории /libxlsxwriter/examples. Файл представлен в данном репозитории.
+3. Для фаззинга был подготовлен файл fuzz.c, в котором осуществляются вызовы функций библиотеки. Данный файл был сохранен в директории /libxlsxwriter/examples. Файл представлен в данном репозитории по пути /fuzzing_files.
 3. Соберем проект libxlsxwriter. Использоваться для этого будет CMake. Авторами проекта любезно был предоставлен [мануал](https://libxlsxwriter.github.io/getting_started.html#:~:text=cmake%20..%0Acmake%20%2D%2Dbuild%20.-,Build%20the%20examples,-If%20there%20weren%27t) по сборке файлов с примерами работы libxlsxwriter, которые находятся в папке /libxlsxwriter/examples. Для их сборки установим кастомный компилятор afl-gcc для С, afl-g++ для C++ с последующей конфигурацией сборки в директории с нашим проектом. Для этого исполним следующие команды:
 ```
 ~/Documents/fuzz/libxlsxwriter$ CC=../AFLplusplus/afl-gcc CXX=../AFLplusplus/afl-g++ cmake ./ -DBUILD_EXAMPLES=ON
@@ -43,7 +43,7 @@ d023a44119d2d6de625e7177069972acff92c0dfeb1fde060b6af59c4a470e2f  libxlsxwriter.
 ~/Documents/fuzz/libxlsxwriter$ CC=../AFLplusplus/afl-gcc CXX=../AFLplusplus/afl-g++ cmake --build .
 ```
 4. В результате сборки будет создан исполняемый файл fuzz, для которого будет производиться фаззинг-тестирование.
-5. Создадим входные корпуса - .xlsx файлы. Файлы представлены в данном репозитории. Корпуса будут сохранены в директории /fuzz/in.
+5. Создадим входные корпуса - .xlsx файлы. Файлы представлены в данном репозитории в папке fuzzing_files/in/. Корпуса будут сохранены в директории /fuzz/in.
 6. Запустим фаззинг тестирование с помощью следующей команды:
 ```
 ~/Documents/fuzz$ AFLplusplus/afl-fuzz -i in -o out -- ./libxlsxwriter/examples/fuzz @@
@@ -59,12 +59,13 @@ sudo echo performance | sudo tee cpu*/cpufreq/scaling_governor
 ```
 8. Результаты фаззинг-тестирования:
 ![image_2024-11-22_08-03-31](https://github.com/user-attachments/assets/3db7f498-182b-4a62-b27f-66de6fafe2de)
-9. Соберем статистику по проведенному фаззинг-тестированию, для этого необходимо установить _gnuplot_:
+Полученные корпуса представлены в данном репозитории, в файле /fuzzing_files/plot_data.zip
+10. Соберем статистику по проведенному фаззинг-тестированию, для этого необходимо установить _gnuplot_:
 ```
 $ sudo apt-get install gnuplot
 ~/Documents/fuzz$ AFLplusplus/afl-plot ./out/default/ plot_data
 ```
-> Результаты представлены в директории plot_data
+> В репозитории результаты представлены в директории /fuzzing_files/plot_data.
 ## Сбор покрытия ##
 1. Изначально нужно установить библиотеку _lvoc_:
 ```
@@ -100,3 +101,4 @@ Overall coverage rate:
 Результат сборки покрытия:
 ![image](https://github.com/user-attachments/assets/1e31344f-d729-48de-b1bc-9937223bac2f)
 ![image](https://github.com/user-attachments/assets/57549968-d63b-4ac7-9ce3-5519c401af66)
+Полученные в результате сборки покрытия файлы представлены в данном репозитории в директории /coverage_files.
