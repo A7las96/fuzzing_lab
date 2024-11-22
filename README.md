@@ -72,9 +72,31 @@ $ $ sudo apt-get install lcov
 ```
 2. Пересоберем проект с использованием компиляторов для покрытия:
 ```
-~/Documents/fuzz/libxlsxwriter$ sudo СС="gcc --coverage" CXX="g++ --coverage" cmake ./ -DBUILD_EXAMPLES=ON
+~/Documents/fuzz/libxlsxwriter$ sudo cmake ./ -DBUILD_EXAMPLES=ON -DCMAKE_C_FLAGS="--coverage" -DCMAKE_CXX_FLAGS="--coverage"
 
-~/Documents/fuzz/libxlsxwriter$ sudo СС="gcc --coverage" CXX="g++ --coverage" cmake --build .
+~/Documents/fuzz/libxlsxwriter$ sudo cmake --build .
 ```
 > Сборку проекта с использованием компиляторов для покрытия нужно выполнять *начисто*
-3.
+3. (Было выявлено экспериментальным путем) Пропишем ```su root```, чтобы выполнять команды от лица супер-пользователя. Прогоним найденные в результате фаззинг-тестирования корпуса через исполняемый файл, чтобы собрать покрытие. Сделать это можно с помощью следующей команды:
+```
+$ for file in out/default/queue/*; do ./libxlsxwriter/examples/fuzz $file; done
+```
+4. Найдем все файлы с расширением _.gdca_. Их наличие в директории с проектом говорит об успешной сборке проекта для нахождения покрытия. Выполним следующую команду:
+```
+$ find . -name "*.gcda"
+```
+5. Соберем информацию о покрытии и выведем ее в читаемом виде с помощью следующих команд:
+```
+~/Documents/fuzz$ sudo lcov -o cov.info -c -d .
+
+~/Documents/fuzz$ genhtml -o cov_data cov.info
+```
+В результате в терминале увидим следующую запись:
+```
+Overall coverage rate:
+  lines......: 20.9% (3232 of 15498 lines)
+  functions..: 24.8% (318 of 1284 functions)
+```
+Результат сборки покрытия:
+![image](https://github.com/user-attachments/assets/1e31344f-d729-48de-b1bc-9937223bac2f)
+![image](https://github.com/user-attachments/assets/57549968-d63b-4ac7-9ce3-5519c401af66)
