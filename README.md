@@ -64,4 +64,5 @@ sudo echo performance | sudo tee cpu*/cpufreq/scaling_governor
 $ sudo apt-get install gnuplot
 ~/Documents/fuzz$ AFLplusplus/afl-plot ./out/default/ plot_data
 ```
+> Результаты представлены в директории plot_data
 ## Сбор покрытия ##
