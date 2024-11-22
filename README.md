@@ -61,6 +61,7 @@ sudo echo performance | sudo tee cpu*/cpufreq/scaling_governor
 ![image_2024-11-22_08-03-31](https://github.com/user-attachments/assets/3db7f498-182b-4a62-b27f-66de6fafe2de)
 9. Соберем статистику по проведенному фаззинг-тестированию, для этого необходимо установить _gnuplot_:
 ```
-
+$ sudo apt-get install gnuplot
+~/Documents/fuzz$ AFLplusplus/afl-plot ./out/default/ plot_data
 ```
-11. Полученные результаты представлены в данном репозитории.
+## Сбор покрытия ##
