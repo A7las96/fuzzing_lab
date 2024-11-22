@@ -66,3 +66,15 @@ $ sudo apt-get install gnuplot
 ```
 > Результаты представлены в директории plot_data
 ## Сбор покрытия ##
+1. Изначально нужно установить библиотеку _lvoc_:
+```
+$ $ sudo apt-get install lcov
+```
+2. Пересоберем проект с использованием компиляторов для покрытия:
+```
+~/Documents/fuzz/libxlsxwriter$ sudo СС="gcc --coverage" CXX="g++ --coverage" cmake ./ -DBUILD_EXAMPLES=ON
+
+~/Documents/fuzz/libxlsxwriter$ sudo СС="gcc --coverage" CXX="g++ --coverage" cmake --build .
+```
+> Сборку проекта с использованием компиляторов для покрытия нужно выполнять *начисто*
+3.
