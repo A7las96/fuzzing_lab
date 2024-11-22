@@ -36,28 +36,28 @@ d023a44119d2d6de625e7177069972acff92c0dfeb1fde060b6af59c4a470e2f  libxlsxwriter.
 ~/Documents/fuzz/AFLplusplus$ make
 ```
 3. Для фаззинга был подготовлен файл fuzz.c, в котором осуществляются вызовы функций библиотеки. Данный файл был сохранен в директории /libxlsxwriter/examples. Файл представлен в данном репозитории по пути /fuzzing_files.
-3. Соберем проект libxlsxwriter. Использоваться для этого будет CMake. Авторами проекта любезно был предоставлен [мануал](https://libxlsxwriter.github.io/getting_started.html#:~:text=cmake%20..%0Acmake%20%2D%2Dbuild%20.-,Build%20the%20examples,-If%20there%20weren%27t) по сборке файлов с примерами работы libxlsxwriter, которые находятся в папке /libxlsxwriter/examples. Для их сборки установим кастомный компилятор afl-gcc для С, afl-g++ для C++ с последующей конфигурацией сборки в директории с нашим проектом. Для этого исполним следующие команды:
+4. Соберем проект libxlsxwriter. Использоваться для этого будет CMake. Авторами проекта любезно был предоставлен [мануал](https://libxlsxwriter.github.io/getting_started.html#:~:text=cmake%20..%0Acmake%20%2D%2Dbuild%20.-,Build%20the%20examples,-If%20there%20weren%27t) по сборке файлов с примерами работы libxlsxwriter, которые находятся в папке /libxlsxwriter/examples. Для их сборки установим кастомный компилятор afl-gcc для С, afl-g++ для C++ с последующей конфигурацией сборки в директории с нашим проектом. Для этого исполним следующие команды:
 ```
 ~/Documents/fuzz/libxlsxwriter$ CC=../AFLplusplus/afl-gcc CXX=../AFLplusplus/afl-g++ cmake ./ -DBUILD_EXAMPLES=ON
 
 ~/Documents/fuzz/libxlsxwriter$ CC=../AFLplusplus/afl-gcc CXX=../AFLplusplus/afl-g++ cmake --build .
 ```
-4. В результате сборки будет создан исполняемый файл fuzz, для которого будет производиться фаззинг-тестирование.
-5. Создадим входные корпуса - .xlsx файлы. Файлы представлены в данном репозитории в папке fuzzing_files/in/. Корпуса будут сохранены в директории /fuzz/in.
-6. Запустим фаззинг тестирование с помощью следующей команды:
+5. В результате сборки будет создан исполняемый файл fuzz, для которого будет производиться фаззинг-тестирование.
+6. Создадим входные корпуса - .xlsx файлы. Файлы представлены в данном репозитории в папке /fuzzing_files/in/. Корпуса будут сохранены в директории /fuzz/in.
+7. Запустим фаззинг тестирование с помощью следующей команды:
 ```
 ~/Documents/fuzz$ AFLplusplus/afl-fuzz -i in -o out -- ./libxlsxwriter/examples/fuzz @@
 ```
 > На данном этапе нужно было установить зависимость libpython3.11. Это было сделано с помощью команды ```$ sudo apt-get install libpython3.11```
 
-7. В ходе установки возникали ошибки, их фикс следующий:
+8. В ходе установки возникали ошибки, их фикс следующий:
 - Переписать файл /proc/sys/kernel/core_pattern, изменив его содержимое на echo core | sudo tee /proc/sys/kernel/core_pattern
-- Исполнить команды
+- Исполнить команды:
 ```
 cd /sys/devices/system/cpu
 sudo echo performance | sudo tee cpu*/cpufreq/scaling_governor
 ```
-8. Результаты фаззинг-тестирования:
+9. Результаты фаззинг-тестирования:
 ![image_2024-11-22_08-03-31](https://github.com/user-attachments/assets/3db7f498-182b-4a62-b27f-66de6fafe2de)
 Полученные корпуса представлены в данном репозитории, в файле /fuzzing_files/plot_data.zip
 10. Соберем статистику по проведенному фаззинг-тестированию, для этого необходимо установить _gnuplot_:
